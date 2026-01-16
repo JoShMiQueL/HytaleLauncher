@@ -1,0 +1,24 @@
+# Compiled executable
+*.exe
+HytaleLauncher.exe
+
+# Generated C# source
+launcher.cs
+
+# Logs
+logs/
+*.log
+
+# Configuration (user-specific)
+config.json
+
+# Build artifacts
+*.obj
+*.pdb
+
+# Windows
+Thumbs.db
+desktop.ini
+
+# PowerShell
+*.ps1xml

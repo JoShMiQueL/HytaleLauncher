@@ -1,0 +1,38 @@
+name: Build Hytale Launcher
+
+on:
+  push:
+    branches: [ main, master ]
+  pull_request:
+    branches: [ main, master ]
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: windows-latest
+    
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v4
+    
+    - name: Build Launcher
+      shell: powershell
+      run: |
+        .\compile_to_exe.ps1
+    
+    - name: Upload Artifact
+      uses: actions/upload-artifact@v4
+      with:
+        name: HytaleLauncher
+        path: HytaleLauncher.exe
+        retention-days: 90
+    
+    - name: Create Release
+      if: startsWith(github.ref, 'refs/tags/')
+      uses: softprops/action-gh-release@v1
+      with:
+        files: HytaleLauncher.exe
+        draft: false
+        prerelease: false
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

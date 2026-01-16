@@ -2,16 +2,6 @@
 *.exe
 HytaleLauncher.exe
 
-# Generated C# source
-launcher.cs
-
-# Logs
-logs/
-*.log
-
-# Configuration (user-specific)
-config.json
-
 # Build artifacts
 *.obj
 *.pdb
@@ -22,3 +12,10 @@ desktop.ini
 
 # PowerShell
 *.ps1xml
+
+# Configuration (user-specific)
+config.json
+
+# User data (user-specific)
+UserData/
+

@@ -1,52 +1,78 @@
 # Hytale Launcher
 
-A lightweight Windows launcher for Hytale that generates authentication tokens and launches the game client.
+A lightweight Windows launcher for Hytale that launches the game client in offline mode.
 
 ## Purpose
 
-This launcher is designed for **unofficial/pirate versions** of Hytale. It solves two key problems:
-
-1. **Unique UUID Generation**: Generates a unique UUID based on your username, so you don't share UUIDs with other users when joining servers. Each username gets a consistent but unique UUID.
-
-2. **Token Simulation**: Fakes the authentication tokens that the game requests to verify a real user, allowing unofficial clients to bypass authentication checks.
+This launcher is designed for **unofficial/pirate versions** of Hytale. It provides a simple executable that launches the game with the correct arguments without needing batch scripts.
 
 ## Features
 
-- **Automatic Token Generation**: Generates UUID, session tokens, and identity tokens automatically
-- **Username-based UUID**: Your UUID is derived from your player name using MD5 hashing, ensuring consistency
-- **Fake Authentication**: Simulates JWT tokens and session tokens that the game expects
-- **Configuration-based**: Uses a JSON configuration file for player name and client path
-- **Error Handling**: Shows user-friendly popup messages for configuration errors and launch failures
-- **Logging**: Maintains detailed logs for debugging purposes
+- **Offline Mode**: Uses `--auth-mode offline` to bypass authentication
+- **Auto Username**: Uses your Windows username automatically
+- **Static UUID**: Uses UUID `13371337-1337-1337-1337-133713371337` by default
+- **Auto Directory Setup**: Creates UserData folder if missing
+- **Configuration File**: Supports `config.json` for custom player name and UUID
+- **Command Line Parameters**: Override settings via command line arguments
+- **Simple**: No configuration needed - just run the executable
 
 ## Usage
 
-### First Run
+### Basic Usage
 
-1. Run `HytaleLauncher.exe`
-2. The launcher will create a `config.json` file if it doesn't exist
-3. A popup will appear asking you to configure the file
-4. Edit `config.json` with your settings:
-   ```json
-   {
-     "playerName": "YourPlayerName",
-     "clientPath": "C:\\Path\\To\\HytaleClient.exe"
-   }
-   ```
-5. Run the launcher again to start the game
+1. Place `HytaleLauncher.exe` in the root of your Hytale installation directory
+2. Run `HytaleLauncher.exe`
+3. The launcher will:
+   - Create a `config.json` file with default settings if it doesn't exist
+   - Create a `UserData` folder if it doesn't exist
+   - Launch `HytaleClient.exe` with the correct arguments
+   - Use your Windows username as the player name
 
 ### Configuration
 
-Edit `config.json` to configure:
+Edit `config.json` to customize your settings:
 
-- **playerName**: Your in-game player name
-- **clientPath**: Full path to the `HytaleClient.exe` executable
+```json
+{
+  "playerName": "YourPlayerName",
+  "uuid": "13371337-1337-1337-1337-133713371337"
+}
+```
 
-### Logs
+### Command Line Parameters
 
-Logs are stored in the `logs` directory:
-- `latest.log`: Most recent log
-- `hytale_YYYYMMDD_HHMMSS.log`: Timestamped logs
+You can override the config.json settings using command line arguments:
+
+```powershell
+# Set custom player name
+HytaleLauncher.exe --name "MyPlayerName"
+
+# Set custom UUID
+HytaleLauncher.exe --uuid "00000000-0000-0000-0000-000000000000"
+
+# Use both
+HytaleLauncher.exe --name "MyPlayerName" --uuid "00000000-0000-0000-0000-000000000000"
+```
+
+**Priority**: Command line parameters > config.json > defaults
+
+## Directory Structure
+
+The launcher expects this directory structure:
+```
+HytaleRoot/
+├── HytaleLauncher.exe
+├── package/
+│   ├── game/
+│   │   └── latest/
+│   │       └── Client/
+│   │           └── HytaleClient.exe
+│   └── jre/
+│       └── latest/
+│           └── bin/
+│               └── java.exe
+└── UserData/ (created automatically)
+```
 
 ## Building from Source
 
@@ -69,20 +95,11 @@ This will:
 2. Compile it using the C# compiler
 3. Create `HytaleLauncher.exe` in the current directory
 
-### Compilation Options
-
-You can customize the default values by editing the placeholders in `compile_to_exe.ps1`:
-
-- `@DEFAULT_PLAYER_NAME@`: Default player name
-- `@DEFAULT_CLIENT_PATH@`: Default client path
-
 ## Error Handling
 
 The launcher handles common errors with popup notifications:
 
-- **Missing config.json**: Creates the file and prompts you to edit it
-- **Invalid client path**: Shows an error message with instructions to fix the path
-- **Launch failures**: Displays detailed error information
+- **Missing HytaleClient.exe**: Shows an error message with the expected path
 
 ## License
 
